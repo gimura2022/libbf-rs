@@ -1,6 +1,11 @@
 use std::{fmt::Display, vec::Vec};
 
+pub mod error;
+
+#[cfg(feature = "interprer")]
 pub mod interprer;
+
+#[cfg(feature = "parser")]
 pub mod parser;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -1,6 +1,6 @@
 use console::Term;
 
-use crate::{Command, Commands};
+use crate::{Command, Commands, error::BfError};
 
 pub struct Runtime {
     mem: Vec<u8>,
@@ -13,6 +13,22 @@ pub enum InterprerError {
     VariableIntegerOverflow,
     VariableIntegerUnderflow,
     MemoryPointerUnderflow,
+}
+
+impl BfError for InterprerError {
+    #[inline(always)]
+    fn error_type(&self) -> String {
+        "Runtime".to_string()
+    }
+
+    fn description(&self) -> String {
+        match self {
+            InterprerError::MemoryPointerUnderflow => "memory pointer underflow",
+            InterprerError::VariableIntegerUnderflow => "variable underflow",
+            InterprerError::VariableIntegerOverflow => "variable overflow",
+        }
+        .to_string()
+    }
 }
 
 impl Default for Runtime {

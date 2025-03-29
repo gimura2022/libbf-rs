@@ -5,3 +5,10 @@ edition = "2024"
 
 [dependencies]
 console = "0.15.11"
+colored = "3.0.0"
+
+[features]
+default = ["parser", "interprer"]
+
+parser = []
+interprer = []

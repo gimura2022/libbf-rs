@@ -1,13 +1,27 @@
 use std::str::Chars;
 
-use crate::{Command, Commands};
+use crate::{Command, Commands, error::BfError};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ParseError {
     LoopStartNotFound,
     LoopEndNotFound,
-
     UndefinedCommand(char),
+}
+
+impl BfError for ParseError {
+    #[inline(always)]
+    fn error_type(&self) -> String {
+        "Parse".to_string()
+    }
+
+    fn description(&self) -> String {
+        match self {
+            ParseError::UndefinedCommand(c) => format!("undefined command '{}'", c),
+            ParseError::LoopStartNotFound => "'[' not found".to_string(),
+            ParseError::LoopEndNotFound => "']' not found".to_string(),
+        }
+    }
 }
 
 pub fn parse(s: &str) -> Result<Commands, ParseError> {
@@ -37,7 +51,7 @@ fn parse_command(it: &mut Chars, c: char) -> Result<Command, ParseError> {
         '[' => parse_loop(it),
         ']' => Err(ParseError::LoopStartNotFound),
 
-        _ => Err(ParseError::UndefinedCommand(it.next().unwrap())),
+        _ => Err(ParseError::UndefinedCommand(c)),
     }
 }
 
